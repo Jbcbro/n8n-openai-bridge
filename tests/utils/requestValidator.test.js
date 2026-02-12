@@ -14,18 +14,15 @@ describe('ValidationService', () => {
       expect(result.error).toBeNull();
     });
 
-    test('should reject request without model', () => {
+    test('should accept request without model', () => {
       const body = {
         messages: [{ role: 'user', content: 'Hello' }],
       };
 
       const result = validateChatCompletionRequest(body);
 
-      expect(result.valid).toBe(false);
-      expect(result.error).toEqual({
-        message: 'Missing required fields: model, messages',
-        type: 'invalid_request_error',
-      });
+      expect(result.valid).toBe(true);
+      expect(result.error).toBeNull();
     });
 
     test('should reject request without messages', () => {
@@ -37,7 +34,7 @@ describe('ValidationService', () => {
 
       expect(result.valid).toBe(false);
       expect(result.error).toEqual({
-        message: 'Missing required fields: model, messages',
+        message: 'Missing required field: messages',
         type: 'invalid_request_error',
       });
     });

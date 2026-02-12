@@ -31,7 +31,7 @@ describe('POST /v1/chat/completions - Validation', () => {
     cleanup();
   });
 
-  test('should return 400 when model is missing', async () => {
+  test('should default to first model when model is missing', async () => {
     const response = await request(app)
       .post('/v1/chat/completions')
       .set('Authorization', 'Bearer test-bearer-token')
@@ -39,9 +39,8 @@ describe('POST /v1/chat/completions - Validation', () => {
         messages: [{ role: 'user', content: 'Hello' }],
       });
 
-    expect(response.status).toBe(400);
-    expect(response.body.error).toHaveProperty('type', 'invalid_request_error');
-    expect(response.body.error.message).toContain('model');
+    expect(response.status).toBe(200);
+    expect(response.body.model).toBe('test-model');
   });
 
   test('should return 400 when messages is missing', async () => {

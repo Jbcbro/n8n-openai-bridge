@@ -73,15 +73,33 @@ describe('chatCompletions route', () => {
 
   describe('POST /', () => {
     describe('validation', () => {
-      it('should return 400 if model is missing', async () => {
+      it('should default to first model when model is not specified', async () => {
+        modelRepository.models = {
+          'first-model': 'https://n8n.example.com/webhook/first',
+        };
+        mockN8nClient.nonStreamingCompletion.mockResolvedValue('Response');
+
         const response = await request(app)
           .post('/')
           .send({
             messages: [{ role: 'user', content: 'Hello' }],
           });
 
-        expect(response.status).toBe(400);
-        expect(response.body.error).toBeDefined();
+        expect(response.status).toBe(200);
+        expect(response.body.model).toBe('first-model');
+      });
+
+      it('should return 404 when model is not specified and no models available', async () => {
+        modelRepository.models = {};
+
+        const response = await request(app)
+          .post('/')
+          .send({
+            messages: [{ role: 'user', content: 'Hello' }],
+          });
+
+        expect(response.status).toBe(404);
+        expect(response.body.error.message).toBe('No models available');
       });
 
       it('should return 400 if messages is missing', async () => {

@@ -117,16 +117,16 @@ test-file:
 # Code Quality: Linting and Formatting
 lint:
 	@echo "Running ESLint..."
-	@docker run --rm -v $(PWD):/app -w /app node:20-alpine sh -c "npm install --silent && npm run lint"
+	@MSYS_NO_PATHCONV=1 docker run --rm -v $(PWD):/app -w /app node:20-alpine sh -c "npm install --silent && npm run lint"
 
 lint-fix:
 	@echo "Running ESLint with auto-fix..."
-	@docker run --rm -v $(PWD):/app -w /app node:20-alpine sh -c "npm install --silent && npm run lint:fix"
+	@MSYS_NO_PATHCONV=1 docker run --rm -v $(PWD):/app -w /app node:20-alpine sh -c "npm install --silent && npm run lint:fix"
 
 format:
 	@echo "Checking code formatting..."
-	@docker run --rm -v $(PWD):/app -w /app node:20-alpine sh -c "npm install --silent && npm run format:check"
+	@MSYS_NO_PATHCONV=1 docker run --rm -v $(PWD):/app -w /app node:20-alpine sh -c "npm install --silent && npm run format:check"
 
 format-fix:
 	@echo "Formatting code with Prettier..."
-	@docker run --rm -v $(PWD):/app -w /app node:20-alpine sh -c "npm install --silent && npm run format"
+	@MSYS_NO_PATHCONV=1 docker run --rm -v $(PWD):/app -w /app node:20-alpine sh -c "npm install --silent && npm run format"

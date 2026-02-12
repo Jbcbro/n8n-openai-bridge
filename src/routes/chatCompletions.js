@@ -73,7 +73,8 @@ router.post('/', async (req, res) => {
   const modelRepository = req.app.locals.modelRepository;
   const n8nClient = req.app.locals.n8nClient;
 
-  const { model, messages, stream = false } = req.body;
+  const { messages, stream = false } = req.body;
+  const model = req.body.model || modelRepository.getFirstModelId();
 
   // SESSION ID DETECTION (Debug logging)
   debugSessionDetection(req, config);
@@ -82,6 +83,12 @@ router.post('/', async (req, res) => {
   const validation = validateChatCompletionRequest(req.body);
   if (!validation.valid) {
     return res.status(400).json({ error: validation.error });
+  }
+
+  if (!model) {
+    return res
+      .status(404)
+      .json(createErrorResponse('No models available', 'invalid_request_error'));
   }
 
   const webhookUrl = modelRepository.getModelWebhookUrl(model);

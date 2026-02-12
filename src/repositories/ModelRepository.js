@@ -89,6 +89,15 @@ class ModelRepository {
   }
 
   /**
+   * Get the first available model ID
+   * @returns {string|undefined} The first model ID or undefined if no models loaded
+   */
+  getFirstModelId() {
+    const keys = Object.keys(this.models);
+    return keys.length > 0 ? keys[0] : undefined;
+  }
+
+  /**
    * Check if a model exists
    * @param {string} modelId - The model identifier
    * @returns {boolean} True if model exists

@@ -26,13 +26,13 @@
  * @returns {Object} { valid: boolean, error: Object|null }
  */
 function validateChatCompletionRequest(body) {
-  const { model, messages } = body;
+  const { messages } = body;
 
-  if (!model || !messages) {
+  if (!messages) {
     return {
       valid: false,
       error: {
-        message: 'Missing required fields: model, messages',
+        message: 'Missing required field: messages',
         type: 'invalid_request_error',
       },
     };
