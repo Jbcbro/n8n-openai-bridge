@@ -64,10 +64,12 @@ jobs:
           # Get the newly created tag from the release action
           TAG=$(git describe --tags --abbrev=0)
           VERSION=${TAG#v}
+          OWNER=$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')
           echo "tag=$TAG" >> $GITHUB_OUTPUT
           echo "version=$VERSION" >> $GITHUB_OUTPUT
           echo "major=$(echo $VERSION | cut -d. -f1)" >> $GITHUB_OUTPUT
           echo "minor=$(echo $VERSION | cut -d. -f1,2)" >> $GITHUB_OUTPUT
+          echo "owner=$OWNER" >> $GITHUB_OUTPUT
 
       - name: Update Release Notes with Docker Tags
         env:
@@ -132,10 +134,10 @@ jobs:
           platforms: linux/amd64,linux/arm64
           push: true
           tags: |
-            ghcr.io/${{ github.repository_owner }}/n8n-openai-bridge:latest
-            ghcr.io/${{ github.repository_owner }}/n8n-openai-bridge:${{ steps.version.outputs.version }}
-            ghcr.io/${{ github.repository_owner }}/n8n-openai-bridge:${{ steps.version.outputs.minor }}
-            ghcr.io/${{ github.repository_owner }}/n8n-openai-bridge:${{ steps.version.outputs.major }}
+            ghcr.io/${{ steps.version.outputs.owner }}/n8n-openai-bridge:latest
+            ghcr.io/${{ steps.version.outputs.owner }}/n8n-openai-bridge:${{ steps.version.outputs.version }}
+            ghcr.io/${{ steps.version.outputs.owner }}/n8n-openai-bridge:${{ steps.version.outputs.minor }}
+            ghcr.io/${{ steps.version.outputs.owner }}/n8n-openai-bridge:${{ steps.version.outputs.major }}
           build-args: |
             VERSION=${{ steps.version.outputs.version }}
             BUILD_DATE=${{ github.event.repository.updated_at }}
